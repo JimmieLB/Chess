@@ -93,6 +93,7 @@ public class OnlineGameState {
             board.display(localColor);
         }
         board.display(localColor);
+        switchPlayer();
     }
 
     public void switchPlayer() {
