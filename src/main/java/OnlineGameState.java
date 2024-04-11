@@ -11,7 +11,8 @@ public class OnlineGameState {
     public Player player1;
     public Player player2;
     public Player currentPlayer;
-    public static String lastMove;
+    public static String lastMove = "";
+    public static String localColor = "";
 
     public static final String urlString = "http://localhost:3000/";
 
@@ -24,9 +25,14 @@ public class OnlineGameState {
             if (count == 0) {
                 player1 = new HumanPlayer("W");
                 player2 = new OnlinePlayer("B", urlString);
-            } else {
+                localColor = "W";
+            } else if (count == 1){
                 player1 = new OnlinePlayer("W", urlString);
                 player2 = new HumanPlayer("B");
+                localColor = "B";
+            } else {
+                System.out.println("Game is Full");
+                System.exit(0);
             }
         } catch (MalformedURLException e) {
             System.out.println("Malformed URL");
@@ -39,7 +45,6 @@ public class OnlineGameState {
     public void turn() {
         while (true) {
             String input = currentPlayer.getInput();
-            System.out.println("input " + input);
             lastMove = input;
             Piece piece;
             if (input.length() == 2 && currentPlayer.getSelection(input) != null) {
@@ -73,7 +78,6 @@ public class OnlineGameState {
                 if (ArrayUtils.includes(valids, move.end) && !ArrayUtils.includes(unValidList, move.end)) {
                     try {
                         API.postJSON(new URL(urlString + "move"), input);
-                        System.out.println("SENT MOVE");
                     }catch (MalformedURLException e) {
                         System.out.println("Malformed URL");
                     }catch (IOException e) {
@@ -86,10 +90,9 @@ public class OnlineGameState {
                 }
                 System.out.println("Invalid Move");
             }
-            board.display(currentPlayer.color);
+            board.display(localColor);
         }
-        board.display(currentPlayer.color.equals("W") ? "B" : "W");
-        this.switchPlayer();
+        board.display(localColor);
     }
 
     public void switchPlayer() {

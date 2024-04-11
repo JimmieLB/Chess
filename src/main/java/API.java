@@ -38,7 +38,6 @@ public class API {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            System.out.println(response.toString());
             br.close();
             String jsonResponse = response.toString().replaceAll("^\\[|]$", "");
 //            return new JSONObject(jsonResponse);
